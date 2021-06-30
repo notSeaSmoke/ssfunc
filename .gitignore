@@ -1,0 +1,6 @@
+__pycache__/
+.vspreview/
+build/
+dist/
+*.egg-info/
+debug.vpy
