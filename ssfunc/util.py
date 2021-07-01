@@ -79,8 +79,6 @@ def get_episode_number(infile: str = None, zfill: int = 2, final: int = None):
 
 
 
-def m4(x):
-    return 16 if x < 16 else cround(x / 4) * 4
 
 
 def scale(value, peak):
