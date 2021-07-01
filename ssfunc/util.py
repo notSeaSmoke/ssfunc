@@ -102,6 +102,13 @@ def peak(clip: vs.VideoNode):
     return (1 << clip.format.bits_per_sample) - 1
 
 
+def scale(value: float, peak: int):
+    """
+    havsfunc's scale function.
 
-def scale(value, peak):
-    return cround(value * peak / 255)
+    :param value:   Input to scale
+    :param peak:    Peak to scale to
+    :rtype:         int
+
+    """
+    return betterround(value * peak / 255)
