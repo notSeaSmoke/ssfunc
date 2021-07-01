@@ -77,8 +77,6 @@ def get_episode_number(infile: str = None, zfill: int = 2, final: int = None):
         return episode.zfill(zfill)
 
 
-def cround(x):
-    return floor(x + 0.5) if x > 0 else ceil(x - 0.5)
 
 
 def m4(x):
