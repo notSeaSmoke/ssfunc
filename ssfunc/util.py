@@ -92,6 +92,15 @@ def betterround(input: float, base: int = 1):
     return base * round(input / base)
 
 
+def peak(clip: vs.VideoNode):
+    """
+    Function to return peak value of a clip.
+
+    :param clip: input clip
+    :rtype: int
+    """
+    return (1 << clip.format.bits_per_sample) - 1
+
 
 
 def scale(value, peak):
