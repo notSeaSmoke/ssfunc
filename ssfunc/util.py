@@ -77,6 +77,19 @@ def get_episode_number(infile: str = None, zfill: int = 2, final: int = None):
         return episode.zfill(zfill)
 
 
+def betterround(input: float, base: int = 1):
+    """
+    Helper function to round input to nearest base.\\
+    Can be used for mod2/4/16 rounding.\\
+    default behaviour is the same as python's `round()`,
+    so it can be used as a `round()` replacement.
+
+    :param input:   Height/Width
+    :param base:    integer to round to
+    :rtype:         int
+
+    """
+    return base * round(input / base)
 
 
 
