@@ -1,6 +1,5 @@
 import vapoursynth as vs
 import random
-from math import floor, ceil
 
 core = vs.core
 
@@ -50,13 +49,13 @@ def lazylist(
 
 def get_episode_number(infile: str = None, zfill: int = 2, final: int = None):
     """
-    Extract episode number from file name.
+    Determine episode number from file path.
 
     :param path:    Path to the episode, in the form of a string
     :param zfill:   Number of digits in output
     :param final:   Last episode number of the show
     :return:        Episode number
-    :rtype:         string
+    :rtype:         str
 
     """
     import re
