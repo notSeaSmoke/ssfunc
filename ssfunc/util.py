@@ -5,7 +5,26 @@ from math import floor, ceil
 core = vs.core
 
 
-def lazylist(clip: vs.VideoNode) -> vs.VideoNode:
+def lazylist(
+    clip: vs.VideoNode,
+    dark_frames: int = 8,
+    light_frames: int = 4,
+    seed: int = 20202020,
+):
+    """
+    A function for generating a list of frames for comparison purposes.
+    Works by running `core.std.PlaneStats()` on the input clip,
+    iterating over all frames, and sorting all frames into 2 lists
+    based on the PlaneStatsAverage value of the frame.
+    Randomly picks frames from both lists, 8 from `dark` and 4
+    from `light` by default.
+
+    :param clip:          Input clip
+    :param dark_frame:    Number of dark frames
+    :param light_frame:   Number of light frames
+    :param seed:          seed for `random.sample()`
+    :return:              List of dark and light frames
+    """
     dark = []
     light = []
 
@@ -18,13 +37,13 @@ def lazylist(clip: vs.VideoNode) -> vs.VideoNode:
         elif 0.450000 <= avg <= 0.800000:
             light.append(i)
 
-    if len(dark) > 8:
-        random.seed(20202020)
-        dark = random.sample(dark, 8)
+    if len(dark) > dark_frames:
+        random.seed(seed)
+        dark = random.sample(dark, dark_frames)
 
-    if len(light) > 4:
-        random.seed(20202020)
-        light = random.sample(light, 4)
+    if len(light) > light_frames:
+        random.seed(seed)
+        light = random.sample(light, light_frames)
 
     return dark + light
 
