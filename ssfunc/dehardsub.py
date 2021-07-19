@@ -12,7 +12,7 @@ core = vs.core
 def dehardsub(
     hrdsb: vs.VideoNode, clean: vs.VideoNode, ref: vs.VideoNode = None, **kwargs
 ):
-    """ 
+    """
     Dehardsub wrapper for lvsfunc.dehardsub.hardsub_mask.
     Generates dehardsub mask using `ref` clip, falls back to `clean`
     if `ref` is not supplied. Hardsubbed clip is dehardsubbed using
