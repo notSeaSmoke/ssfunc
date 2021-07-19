@@ -26,8 +26,10 @@ def lazylist(
     :param dark_frame:    Number of dark frames
     :param light_frame:   Number of light frames
     :param seed:          seed for `random.sample()`
+    :param diff_thr:      Minimum distance between each frames (In seconds)
     :return:              List of dark and light frames
     """
+
     dark = []
     light = []
 
