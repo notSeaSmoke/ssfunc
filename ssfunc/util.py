@@ -182,9 +182,9 @@ def get_uv(clip: vs.VideoNode):
     clip = clip.fmtc.bitdepth(bits=32)
     t_y = core.std.BlankClip(clip, 960, 540)
 
-    return core.std.ShufflePlanes(
-        [t_y, clip], planes=[0, 1, 2]
-    ).resize.Point(format="vs." + clip.format.name)
+    return core.std.ShufflePlanes([t_y, clip], planes=[0, 1, 2]).resize.Point(
+        format="vs." + clip.format.name
+    )
 
 
 def desync(clipa: vs.VideoNode, clipb: vs.VideoNode, start: int = 0):
