@@ -157,3 +157,11 @@ def scale(value: float, peak: int):
 
     """
     return betterround(value * peak / 255)
+
+
+def midval(val=Union[List, List[Tuple]]):
+    from statistics import median
+
+    return median(val) if median(val) % 2 == 0 else betterround(median(val))
+
+
