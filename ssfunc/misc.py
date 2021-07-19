@@ -115,10 +115,26 @@ def screengen(
         filename = "{path}/{prefix}{:03d}.png".format(
             i, path=folder_path, prefix=prefix
         )
-        print(f"Saving Frames: {i}/{len(screens)} frames", end="\r")
+
+        try:
+            matrix_prop = clip.get_frame(0).props._Matrix
+        except:
+            matrix_prop = 1
+
+        matrix = {
+            1: "709",
+            2: "unspec",
+            5: "470bg",
+            6: "170m",
+            7: "240m",
+            9: "2020ncl",
+            10: "2020cl",
+        }.get(matrix_prop)
+
+        print(f"Saving Frames from {prefix}: {i}/{len(screens)} frames", end="\r")
         core.imwri.Write(
             clip.resize.Spline36(
-                format=vs.RGB24, matrix_in_s="709", dither_type="error_diffusion"
+                format=vs.RGB24, matrix_in_s=matrix, dither_type="error_diffusion"
             ),
             "PNG",
             filename,
