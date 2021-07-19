@@ -165,3 +165,23 @@ def midval(val=Union[List, List[Tuple]]):
     return median(val) if median(val) % 2 == 0 else betterround(median(val))
 
 
+def get_uv(clip: vs.VideoNode):
+    """
+    Converts clip to 32 bit float, creates a blank luma clip,
+    and returns the UV planes merged with the blank luma.
+    Output clip is converted to input format.
+
+    :param clip:    Input clip
+    :rtype:         vs.VideoNode
+    :returns:       Merge of Chroma planes from input clip
+
+    """
+
+    clip = clip.fmtc.bitdepth(bits=32)
+    t_y = core.std.BlankClip(clip, 960, 540)
+
+    return core.std.ShufflePlanes(
+        [t_y, clip], planes=[0, 1, 2]
+    ).resize.Point(format="vs." + clip.format.name)
+
+
