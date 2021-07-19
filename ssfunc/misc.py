@@ -61,17 +61,24 @@ def output_ranges(clip: vs.VideoNode, ranges: str = None) -> vs.VideoNode:
     return out[1:]
 
 
-def screen_gen_mod(
-    clip, folder, prefix, frame_numbers=None, start=1, delim=" ", generate_list=False
+def screengen(
+    clip: vs.VideoNode,
+    folder: str,
+    prefix: str,
+    frame_numbers: List = None,
+    start: int = 1,
+    delim=" ",
 ):
     """
     Mod of Narkyy's screenshot generator, stolen from awsmfunc.
-    Generates screenshots from a list of frame.
-    `folder` is the folder name that is created.
-    `prefix` is the name prepended to screenshots (usually group name) .
-    `frame_numbers` is the list of frames. Either a list or a file.
-    Not specifying `frame_numbers` will save 8 random dark frames and 4 random light frames.
-    `start` is the number at which the filenames start.
+    Generates screenshots from a list of frames.
+    Not specifying `frame_numbers` will use `ssfunc.util.lazylist()` to generate a list of frames.
+
+    :param folder:            Name of folder where screenshots are saved.
+    :param prefix:            Name prepended to screenshots (usually group name).
+    :param frame_numbers:     List of frames. Either a list or an external file.
+    :param start:             Frame to start from.
+    :param delim:             Delimiter for the external file.
 
     > Usage: ScreenGen(src, "Screenshots", "a")
              ScreenGen(enc, "Screenshots", "b")
@@ -89,12 +96,17 @@ def screen_gen_mod(
 
         # str to int
         screens = [int(x.strip()) for x in screens]
+
     elif isinstance(frame_numbers, list):
         screens = frame_numbers
+
     elif frame_numbers is None:
         screens = lazylist(clip)
+
     else:
-        raise TypeError("frame_numbers must be a file path or a list of frame numbers")
+        raise TypeError(
+            "frame_numbers must be a a list of frames, a file path, or None"
+        )
 
     if not os.path.isdir(folder_path):
         os.mkdir(folder_path)
