@@ -1,5 +1,8 @@
 import vapoursynth as vs
 import random
+from typing import Union, List, Tuple
+from functools import partial
+from lvsfunc.render import clip_async_render
 
 core = vs.core
 
@@ -9,6 +12,7 @@ def lazylist(
     dark_frames: int = 8,
     light_frames: int = 4,
     seed: int = 20202020,
+    diff_thr: int = 15,
 ):
     """
     A function for generating a list of frames for comparison purposes.
@@ -27,24 +31,66 @@ def lazylist(
     dark = []
     light = []
 
-    stats = clip.std.PlaneStats()
-    for i, f in enumerate(stats.frames()):
-        print(f"Checking Frames: {i}/{stats.num_frames} frames", end="\r")
-        avg = f.props["PlaneStatsDiff"]
+    def checkclip(n, f, clip):
+
+        avg = f.props["PlaneStatsAverage"]
+
         if 0.062746 <= avg <= 0.380000:
-            dark.append(i)
+            dark.append(n)
+
         elif 0.450000 <= avg <= 0.800000:
-            light.append(i)
+            light.append(n)
 
-    if len(dark) > dark_frames:
+        return clip
+
+    s_clip = clip.std.PlaneStats()
+
+    eval_frames = core.std.FrameEval(
+        clip, partial(checkclip, clip=s_clip), prop_src=s_clip
+    )
+    clip_async_render(eval_frames, progress="Evaluating Clip: ")
+
+    dark.sort()
+    light.sort()
+
+    dark_dedupe = [dark[0]]
+    light_dedupe = [light[0]]
+
+    thr = round(clip.fps_num / clip.fps_den * diff_thr)
+    lastvald = dark[0]
+    lastvall = light[0]
+
+    for i in range(1, len(dark)):
+
+        checklist = dark[0:i]
+        x = dark[i]
+
+        for y in checklist:
+            if x >= y + thr and x >= lastvald + thr:
+                dark_dedupe.append(x)
+                lastvald = x
+                break
+
+    for i in range(1, len(light)):
+
+        checklist = light[0:i]
+        x = light[i]
+
+        for y in checklist:
+            if x >= y + thr and x >= lastvall + thr:
+                light_dedupe.append(x)
+                lastvall = x
+                break
+
+    if len(dark_dedupe) > dark_frames:
         random.seed(seed)
-        dark = random.sample(dark, dark_frames)
+        dark_dedupe = random.sample(dark_dedupe, dark_frames)
 
-    if len(light) > light_frames:
+    if len(light_dedupe) > light_frames:
         random.seed(seed)
-        light = random.sample(light, light_frames)
+        light_dedupe = random.sample(light_dedupe, light_frames)
 
-    return dark + light
+    return dark_dedupe + light_dedupe
 
 
 def get_episode_number(infile: str = None, zfill: int = 2, final: int = None):
