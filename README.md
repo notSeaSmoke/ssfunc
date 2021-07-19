@@ -16,7 +16,6 @@ If you find something broken or very obviously wrong, feel free to open an issue
 If you have an old `ssfunc.py` or an older `stolenfunc.py` on your system, delete that. Then run the following command.
 ```
 python -m pip install git+https://github.com/notSeaSmoke/ssfunc.git
-
 ```
 
 # Requirements
