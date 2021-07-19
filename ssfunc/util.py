@@ -59,7 +59,7 @@ def get_episode_number(infile: str = None, zfill: int = 2, final: int = None):
 
     """
     import re
-    from __init__ import EpisodeNotFound
+    from . import EpisodeNotFound
 
     if infile is None:
         raise TypeError("`get_episode_number` requires a string input")
