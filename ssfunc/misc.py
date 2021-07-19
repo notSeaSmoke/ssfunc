@@ -1,8 +1,8 @@
 import vapoursynth as vs
 import os
 
-from util import lazylist
-from typing import cast, Tuple
+from .util import lazylist
+from typing import cast, Tuple, List
 
 core = vs.core
 
