@@ -14,4 +14,5 @@ setup(
     url="https://github.com/notSeaSmoke/ssfunc.git",
     install_requires=["vapoursynth"],
     python_requires=meta["__python__"],
+    zip_safe=False
 )
