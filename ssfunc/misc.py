@@ -140,8 +140,3 @@ def screengen(
             filename,
             overwrite=True,
         ).get_frame(num)
-
-
-# ALIASES
-ScreenGenMod = ScreenGen = screen_gen_mod
-OutputFrames = OutputRanges = ofs = output_ranges
