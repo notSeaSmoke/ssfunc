@@ -185,3 +185,33 @@ def get_uv(clip: vs.VideoNode):
     ).resize.Point(format="vs." + clip.format.name)
 
 
+def desync(clipa: vs.VideoNode, clipb: vs.VideoNode, start: int = 0):
+    """
+    Function to check the `PlaneStatsDiff` value of two clips
+    in order to find desync points between the clips.
+    Written to help with syncing Wakanim/BiliBili sources
+    to Funimation video.
+
+    Clip prints first desync point it finds to stderr, then breaks.
+    Sync clips up as it finds desync points and run it again, until
+    it runs through the whole clip without breaking. To speed things
+    up, you can manually specify a `start` point. For eg. if you've
+    fixed desyncs upto frame 8100, set `start=8100`. That'll save time
+    since the function won't run on frames which have already been checked.
+
+    :param clipa:   Master clip
+    :type clipa:    vs.VideoNode
+    :param clipb:   Desynced clip
+    :type clipb:    vs.VideNode
+    :param start:   Frame to start checking from
+    :rtype:         None
+
+    """
+    stats = core.std.PlaneStats(clipa, clipb)
+
+    for i in range(start, stats.num_frames):
+        print(f"Checking Frames: {i}/{stats.num_frames} frames", end="\r")
+        diff = stats.get_frame(i).props["PlaneStatsDiff"]
+        if diff > 0.150000:
+            print(f"desync detected at >>{i}<<")
+            break
