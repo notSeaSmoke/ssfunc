@@ -7,8 +7,6 @@
 import functools
 from typing import Callable
 
-import aa, deband, dehalo, mask, misc, util  # noqa
-from _metadata import __version__, __author__  # noqa
 from . import aa, deband, dehalo, fansub, misc, mask, misc, util  # noqa
 from ._metadata import __version__, __author__  # noqa
 
