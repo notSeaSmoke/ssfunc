@@ -1,6 +1,10 @@
+# Ignored Directories
 __pycache__/
 .vspreview/
 build/
 dist/
 *.egg-info/
+
+# Debug/WIP files
 debug.vpy
+dehardsub_rewrite.py
