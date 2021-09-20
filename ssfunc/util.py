@@ -2,7 +2,6 @@ import vapoursynth as vs
 import random
 from typing import Union, List, Tuple
 from functools import partial
-from lvsfunc.render import clip_async_render
 
 core = vs.core
 
@@ -29,6 +28,7 @@ def lazylist(
     :param diff_thr:      Minimum distance between each frames (In seconds)
     :return:              List of dark and light frames
     """
+    from lvsfunc.render import clip_async_render
 
     dark = []
     light = []
