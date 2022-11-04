@@ -35,3 +35,5 @@ __deprecate("MaskedDB", deband.masked_deband)
 
 masked_deband = deband.masked_deband
 basedAA = aa.basedAA
+src = util.src
+lehmer = util.lehmer_merge

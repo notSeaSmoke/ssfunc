@@ -220,3 +220,27 @@ def output_ranges(clip: vs.VideoNode, ranges: str = None) -> vs.VideoNode:
         out = out + clip[start : end + 1]
     # remember to remove our tempory frame
     return out[1:]
+
+
+def src(path: str, force_ffms2: bool = False, image: bool = False, **indexer_args) -> vs.VideoNode:
+    """
+    Wrapper for core.ffms2.Source() and core.lsmas.LWLibavSource().
+
+    :param path:            Path to video file
+    :param force_ffms2:     Force ffms2 over lsmas
+    :rtype:                 vs.VideoNode
+    :returns:               Video clip
+    """
+
+    if path.endswith('.jpg') or path.endswith('.png') or image is True:
+        return core.imwri.Read(path, **indexer_args)
+    elif path.endswith('mp4'):
+        return core.lsmas.LibavSMASHSource(path, **indexer_args)
+    elif path.endswith('.d2v'):
+        return core.d2v.Source(path, **indexer_args)
+    elif path.endswith('.dgi'):
+        return core.dgdecodenv.DGSource(path, **indexer_args)
+    elif force_ffms2:
+        return core.ffms2.Source(path, **indexer_args)
+    else:
+        return core.lsmas.LWLibavSource(path, **indexer_args)
