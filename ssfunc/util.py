@@ -167,3 +167,56 @@ def lehmer_merge(clips: List, radius: int = 3, passes: int = 2):
 
     return core.akarin.Expr(clips + blur, expr)
 
+
+def output_ranges(clip: vs.VideoNode, ranges: str = None) -> vs.VideoNode:
+    """
+    Simple modification of fvsfunc.ReplaceFrames() that returns ranges
+    of input clips rather than replacing them with a different clip.
+
+    Could be useful for testing filter settings, i.e. make a test encode
+    of all filtered ranges to confirm scenefiltering is as expected.
+
+    Functions almost entirely the same as rfs (as the point is to be able
+    to use it to test rfs), with the only difference being that, since
+    zero length clips are not supported in VapourSynth, mappings without
+    any ranges (i.e. what would pass through `clipa` in rfs) will throw
+    an error here.
+
+    Original function by EoE, modified by SeaSmoke to lvsfunc.ReplaceFrames
+    format.
+
+    :param clip:        Input clip
+    :param ranges:      Frame ranges for output. Ranges are inclusive exactly the same as fvsfunc.ReplaceFrames.
+
+    :return:            Clip trimmed to specified frame ranges
+    """
+
+    if not isinstance(clip, vs.VideoNode):
+        raise TypeError('OutputFrames: "clipa" must be a clip!')
+
+    for r in ranges:
+        if type(r) is tuple:
+            start, end = cast(Tuple[int, int], r)
+        else:
+            start = cast(int, r)
+            end = cast(int, r)
+
+    if start > end:
+        raise ValueError(
+            "OutputFrames: Start frame is bigger than end frame: [{} {}]".format(
+                start, end
+            )
+        )
+    if end >= clip.num_frames:
+        raise ValueError(
+            "OutputFrames: End frame too big, one of the clips has less frames: {}".format(
+                end
+            )
+        )
+
+    # create clip with with tempory frame at the start as zero length clips aren't allowed by vs
+    out = core.std.BlankClip(clip, length=1)
+    for start, end in ranges:
+        out = out + clip[start : end + 1]
+    # remember to remove our tempory frame
+    return out[1:]
