@@ -127,3 +127,43 @@ def desync(clipa: vs.VideoNode, clipb: vs.VideoNode, start: int = 0):
         if diff > 0.150000:
             print(f"desync detected at >>{i}<<")
             break
+
+
+def lehmer_merge(clips: List, radius: int = 3, passes: int = 2):
+    from vsutil import EXPR_VARS
+
+    blur = [
+        core.std.BoxBlur(
+            i, hradius=radius, vradius=radius, hpasses=passes, vpasses=passes
+        )
+        for i in clips
+    ]
+
+    count = len(clips)
+    iterations = range(count)
+    clipvars = EXPR_VARS[:count]
+    blurvars = EXPR_VARS[count:]
+    expr = ""
+
+    for i in iterations:
+        expr += f"{clipvars[i]} {blurvars[i]} - D{i}! "
+
+    for i in iterations:
+        expr += f"D{i}@ 3 pow "
+    expr += "+ " * (count - 1)
+    expr += "P1! "
+
+    for i in iterations:
+        expr += f"D{i}@ 2 pow "
+    expr += "+ " * (count - 1)
+    expr += "P2! "
+
+    expr += "P2@ 0 = 0 P1@ P2@ / ? "
+
+    for i in iterations:
+        expr += f"{blurvars[i]} "
+    expr += "+ " * (count - 1)
+    expr += f"{count} / +"
+
+    return core.akarin.Expr(clips + blur, expr)
+
