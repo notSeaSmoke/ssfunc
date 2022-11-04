@@ -31,12 +31,6 @@ def __deprecate(old_name: str, func: Callable):
 __deprecate("RetinexLinemask", mask.retinex_linemask)
 __deprecate("Blurred_Dehalo", dehalo.blurred_dehalo)
 __deprecate("Halocide", dehalo.halocide)
-__deprecate("OutputFrames", misc.output_ranges)
-__deprecate("OutputFrames", misc.output_ranges)
-__deprecate("OutputFramesSimple", misc.output_ranges)
-__deprecate("ofs", misc.output_ranges)
-__deprecate("ScreenGenMod", misc.screengen)
-__deprecate("ScreenGen", misc.screengen)
 __deprecate("LazyList", util.lazylist)
 __deprecate("MaskedDB", deband.masked_deband)
 
