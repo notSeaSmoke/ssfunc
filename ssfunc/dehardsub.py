@@ -1,10 +1,9 @@
 import vapoursynth as vs
 
 from lvsfunc.dehardsub import hardsub_mask
-from lvsfunc.util import replace_ranges
-from lvsfunc.types import Range
+from vstools import replace_ranges, FrameRangeN, FrameRangesN
 
-from typing import Union, List
+from typing import List
 
 core = vs.core
 
@@ -36,7 +35,7 @@ def dehardsub_signs(
     hrdsb: vs.VideoNode,
     clean: vs.VideoNode,
     ref: vs.VideoNode = None,
-    ranges: Union[Range, List[Range]] = None,
+    ranges: FrameRangeN | FrameRangesN | None = None,
     **kwargs,
 ):
 
