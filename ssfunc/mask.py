@@ -26,8 +26,8 @@ def retinex_linemask(
     :param mode:    Mask to be be used
 
     """
-    from vardefunc.mask import FDOG, ExLaplacian1, Kirsch
     from vsutil import get_y
+    from vsmask.edge import FDoG, ExLaplacian1, Kirsch
 
     luma = get_y(clip)
     ret = core.retinex.MSRCP(luma, sigma=[50, 200, 350], upper_thr=0.005)
@@ -37,17 +37,17 @@ def retinex_linemask(
 
     if mode == 1:
         if scale == 1:
-            mask = get_y(Kirsch().get_mask(clip))
+            mask = get_y(Kirsch().edgemask(clip))
         else:
-            mask = get_y(Kirsch().get_mask(clip)).std.Expr(f"x {scale} *")
+            mask = get_y(Kirsch().edgemask(clip)).std.Expr(f"x {scale} *")
         return core.std.Expr([mask, tcanny], "x y +")
     elif mode == 2:
         if scale == 1:
-            fdm = get_y(FDOG().get_mask(clip))
+            fdm = get_y(FDoG().edgemask(clip))
         else:
-            fdm = get_y(FDOG().get_mask(clip)).std.Expr(f"x {scale} *")
+            fdm = get_y(FDoG().edgemask(clip)).std.Expr(f"x {scale} *")
 
-        exlap = get_y(ExLaplacian1().get_mask(clip))
+        exlap = get_y(ExLaplacian1().edgemask(clip))
         mask = core.std.Expr([fdm, exlap], "x y +")
 
         return core.std.Expr([mask, tcanny], "x y +")
